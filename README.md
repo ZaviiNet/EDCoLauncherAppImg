@@ -17,15 +17,16 @@ A Bash script designed to automate the installation, configuration, and launchin
 *   **Elite Dangerous**: Installed via Steam (App ID: `359320`).
 *   **Protontricks**: Must be installed and available in your `$PATH`.
 *   **System Dependencies**: `curl`, `sed`, `grep`, `pgrep` and `tput` (standard on most distros).
+*   **Elite Dangerous Proton Version**: `curl`, `sed`, `grep`, `pgrep` and `tput` (standard on most distros).
 
 ## 🛠️ Installation & Setup
 
 1.  Download the latest release from [here](https://github.com/ScronicDeEggdog/EDCoLauncher/releases):
 2.  Unzip the file
 3.  Make the EDCoLauncher.sh file executable
-4.  Make any changes you need to the config file
+4.  Read the configuration section below and make any changes you need to the config file
 5.  Copy both files into the Elite Dangerous install directory. You can find the right folder by right clicking on the game in Steam, then going to Properties -> Installed Files -> Browse
-6.  Check out the [useage](#Usage) section for instructions on how to use EDCoLauncher
+6.  Check out the [useage](#-usage) section for instructions on how to use EDCoLauncher
 
 ## ⚙️ Configuration
 
@@ -64,21 +65,22 @@ To run the launcher alongside MinEdCopilot, change your Steam Launch Options to:
 ```bash
 <MinEdLaunchOptions> & ./EDCoLauncher.sh
 ```
+[!WARNING]
 **EDCoLauncher does not support the use of the /autoquit option for MinEdLauncher**
 
 ## 📂 Troubleshooting & Logs
 The script generates specific logs in its local directory:
-**EDCoLauncher.log:** Core script execution and logic.
-**EDCoLauncher_EDCoPilot_Install.log:** Output from the .msi installation process.
-**EDCoLauncher_EDCoPTER_Install.log:** Output from the .exe installation process.
-**EDCoLauncher_EDCoPilot.log:** Runtime output from EDCoPilot.
-**EDCoLauncher_EDCoPTER.log:** Runtime output from EDCoPilot.
+*   **EDCoLauncher.log**: Core script execution and logic.
+*   **EDCoLauncher_EDCoPilot_Install.log**: Output from the .msi installation process.
+*   **EDCoLauncher_EDCoPTER_Install.log**: Output from the .exe installation process.
+*   **EDCoLauncher_EDCoPilot.log**: Runtime output from EDCoPilot.
+*   **EDCoLauncher_EDCoPTER.log**: Runtime output from EDCoPilot.
 
 ## ⚖️ License
 This project is licensed under the GNU GPLv3 License.
 
 ## 🤝 Acknowledgments
-EDCoPilot by Razzafrag
-EDCoPTER by Mark Hollingworth
-Elite Dangerous by Frontier Developments
-protontricks by Matoking
+[EDCoPilot](https://www.razzafrag.com/) by Razzafrag
+[EDCoPTER](https://edcopter.net/) by Mark Hollingworth
+[Elite Dangerous](https://www.elitedangerous.com/) by Frontier Developments
+[protontricks](https://github.com/Matoking/protontricks) by Matoking
