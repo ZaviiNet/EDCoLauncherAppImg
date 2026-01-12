@@ -56,6 +56,7 @@ EDCOPTER_EXE_PATH="" # Specify the path to the EDCoPTER.exe file if you installe
 <p>[!NOTE]
 EDCoLauncher has been tested and works with Proton 10.0-3. Using a different Proton version may not work</p>
 </blockquote>
+
 To run EDCoPilot and EDCoPTER manually after the game launches, run the script from your terminal:
 ```bash
 ./EDCoLauncher.sh
@@ -68,6 +69,7 @@ To run the launcher alongside MinEdCopilot, change your Steam Launch Options to:
 ```bash
 <MinEdLaunchOptions> & ./EDCoLauncher.sh
 ```
+
 <blockquote>
 <p>[!WARNING]
 EDCoLauncher does not support the use of the /autoquit option for MinEdLauncher</p>
