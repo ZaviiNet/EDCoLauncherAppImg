@@ -63,7 +63,7 @@ To run the launcher alongside MinEdCopilot, change your Steam Launch Options to:
 ```bash
 <MinEdLaunchOptions> & ./EDCoLauncher.sh
 ```
-**The EDCoLauncher does not support the use of the /autoquit option for MinEdLauncher**
+**EDCoLauncher does not support the use of the /autoquit option for MinEdLauncher**
 
 ## 📂 Troubleshooting & Logs
 The script generates specific logs in its local directory:
