@@ -61,11 +61,11 @@ To run EDCoPilot and EDCoPTER manually after the game launches, run the script f
 ```bash
 ./EDCoLauncher.sh
 ```
-To run the add-ons automatically withe the game, change your Steam Launch Options to:
+To run the add-ons automatically with the game, change your Steam Launch Options to:
 ```bash
 %command% & ./EDCoLauncher.sh
 ```
-To run the launcher alongside MinEdCopilot, change your Steam Launch Options to:
+To run EDCoLauncher alongside MinEdLauncher, change your Steam Launch Options to:
 ```bash
 <MinEdLaunchOptions> & ./EDCoLauncher.sh
 ```
