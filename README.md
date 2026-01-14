@@ -20,7 +20,7 @@ A Bash script designed to automate the installation, configuration, and launchin
 
 ## 🛠️ Installation & Setup
 
-1.  Download the latest release from [here](github.com).
+1.  Download the latest release from [here](https://github.com/ScronicDeEggdog/EDCoLauncher/releases).
 2.  Unzip the archive.
 3.  Make the script executable:
     ```bash
