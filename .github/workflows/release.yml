@@ -1,0 +1,57 @@
+name: Auto-Release on Merge
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  release:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required to see the full tag history
+
+      # 1. Determine if we should bump Major, Minor, or Patch
+      - name: Determine Version Bump
+        id: bump_logic
+        run: |
+          BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
+          if [[ $BRANCH_NAME == major/* ]]; then
+            echo "type=major" >> $GITHUB_OUTPUT
+          elif [[ $BRANCH_NAME == feat/* ]] || [[ $BRANCH_NAME == feature/* ]]; then
+            echo "type=minor" >> $GITHUB_OUTPUT
+          else
+            echo "type=patch" >> $GITHUB_OUTPUT
+          fi
+
+      # 2. Calculate next version and push the new tag
+      - name: Bump Version and Push Tag
+        id: tagger
+        uses: anothrNick/github-tag-action@1.64.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          DEFAULT_BUMP: ${{ steps.bump_logic.outputs.type }}
+
+      # 3. Zip the project
+      - name: Zip files
+        run: zip -r EDCoLauncher-${{ steps.tagger.outputs.new_tag }}.zip . -x "*.git*"
+
+      # 4. Create the formal GitHub Release
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tagger.outputs.new_tag }}
+          name: Release ${{ steps.tagger.outputs.new_tag }}
+          files: EDCoLauncher-${{ steps.tagger.outputs.new_tag }}.zip
+          generate_release_notes: true # Automatically lists PRs in the notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
