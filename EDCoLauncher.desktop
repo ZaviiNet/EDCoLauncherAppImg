@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Elite Dangerous (EDCoLauncher)
+Exec=steam steam://rungameid/359320
+Icon=edcolauncher
+Type=Application
+Categories=Game;Utility;
+Terminal=false

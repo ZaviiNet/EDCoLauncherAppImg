@@ -73,6 +73,16 @@ EDCOPILOT_EXE_PATH=""
 
 # Specify the path to the EDCoPTER.exe file if you installed into a non-default location. Leave blank otherwise
 EDCOPTER_EXE_PATH=""
+
+#################
+# Google TTS Support
+#################
+
+# The script features an option to enable Google Text-to-Speech (TTS). To use this:
+
+# Ensure the feature is enabled in your config.
+
+# Provide the valid path to your Google Cloud JSON key file in EDCoLauncher_config.
 ```
 
 ## 🖥️ Usage
