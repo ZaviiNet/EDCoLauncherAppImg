@@ -24,7 +24,7 @@ A Bash script designed to automate the installation, configuration, and launchin
 2.  Place the AppImage Anywhere, You can even add it to your applications
 3.  In your Elite Dangerous properties in Steam, set the Launch Options to:
     ```bash
-    STEAM_COMPAT_LAUNCHER_SERVICE=container-runtime %command% & /path/to/Elite_Dangerous_(EDCoLauncher)-x86_64.AppImage
+    STEAM_COMPAT_LAUNCHER_SERVICE=container-runtime %command% & /path/to/EDCoLauncher-x86_64.AppImage
     ```
 4.  Run Elite Once to Let the App Create a config file.
 5.  Configure your preferences in `EDCoLauncher_config`. For a first-time install (Path of the config is where you installed it, set:
