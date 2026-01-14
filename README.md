@@ -20,19 +20,18 @@ A Bash script designed to automate the installation, configuration, and launchin
 
 ## 🛠️ Installation & Setup
 
-1.  Download the latest release from [here](https://github.com/ScronicDeEggdog/EDCoLauncher/releases).
-2.  Unzip the archive.
-3.  Make the script executable:
+1.  Download the latest release from [here](https://github.com/ZaviiNet/EDCoLauncherAppImg/releases).
+2.  Place the AppImage Anywhere, You can even add it to your applications
+3.  In your Elite Dangerous properties in Steam, set the Launch Options to:
     ```bash
-    chmod +x EDCoLauncher.sh
+    STEAM_COMPAT_LAUNCHER_SERVICE=container-runtime %command% & /path/to/Elite_Dangerous_(EDCoLauncher)-x86_64.AppImage
     ```
-4.  Configure your preferences in `EDCoLauncher_config`. For a first-time install, set:
+4.  Run Elite Once to Let the App Create a config file.
+5.  Configure your preferences in `EDCoLauncher_config`. For a first-time install (Path of the config is where you installed it, set:
     ```bash
     INSTALL_EDCOPILOT="true"
     INSTALL_EDCOPTER="true"
     ```
-5.  Copy `EDCoLauncher.sh` and `EDCoLauncher_config` into your Elite Dangerous install directory. 
-    *   *Tip: Right-click the game in Steam > Properties > Installed Files > Browse.*
 
 ## ⚙️ Configuration
 
