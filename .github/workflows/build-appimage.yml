@@ -22,20 +22,19 @@ jobs:
       run: |
         mkdir -p EDCoLauncher.AppDir/usr/bin
 
-    - name: Set AppImage Icon (Robust)
+    - name: Set AppImage Icon (Fixing the Error)
       run: |
-        # 1. Check for local icon, 2. Try download, 3. Create dummy if all else fails
-        if [ -f "image_c7676d.png" ]; then
-           cp "image_c7676d.png" EDCoLauncher.AppDir/.DirIcon
-        else
-           # Try downloading, but add "|| true" so it DOES NOT crash the build if it fails
-           wget -q -O EDCoLauncher.AppDir/.DirIcon https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Tux.png/256px-Tux.png || true
-        fi
+        # The tool FAILED because we claimed the icon was 'steam_icon_359320' but didn't provide it.
+        # We will download a generic icon and save it with THAT EXACT NAME to satisfy the builder.
         
-        # Final safety check: if icon is still missing (0 bytes), touch it so the build continues
-        if [ ! -s EDCoLauncher.AppDir/.DirIcon ]; then
-           touch EDCoLauncher.AppDir/.DirIcon
-        fi
+        ICON_NAME="steam_icon_359320.png"
+        ICON_URL="https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Tux.png/256px-Tux.png"
+        
+        # 1. Download the icon
+        wget -q -O "EDCoLauncher.AppDir/$ICON_NAME" "$ICON_URL" || touch "EDCoLauncher.AppDir/$ICON_NAME"
+        
+        # 2. Also set it as the .DirIcon (what you see in the file manager)
+        cp "EDCoLauncher.AppDir/$ICON_NAME" EDCoLauncher.AppDir/.DirIcon
 
     - name: Create Internal AppRun (The Logic)
       run: |
@@ -61,6 +60,7 @@ jobs:
 
     - name: Create Internal Desktop File (Metadata)
       run: |
+        # Note: We must use the Icon name we just created above (without extension)
         cat <<EOF > EDCoLauncher.AppDir/EDCoLauncher.desktop
         [Desktop Entry]
         Name=EDCoLauncher
@@ -86,10 +86,10 @@ jobs:
         wget -q https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
         chmod +x appimagetool-x86_64.AppImage
 
-        # EXTRACT it explicitly to bypass FUSE errors (Exit Code 8)
+        # EXTRACT explicitly to bypass FUSE errors
         ./appimagetool-x86_64.AppImage --appimage-extract
         
-        # Run the extracted tool to build your AppImage
+        # Run the extracted tool
         export ARCH=x86_64
         ./squashfs-root/AppRun EDCoLauncher.AppDir
 
