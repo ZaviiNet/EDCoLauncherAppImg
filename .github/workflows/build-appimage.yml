@@ -22,19 +22,11 @@ jobs:
       run: |
         mkdir -p EDCoLauncher.AppDir/usr/bin
 
-    - name: Set AppImage Icon (Fixing the Error)
+    - name: Set AppImage Icon (Visual only)
       run: |
-        # The tool FAILED because we claimed the icon was 'steam_icon_359320' but didn't provide it.
-        # We will download a generic icon and save it with THAT EXACT NAME to satisfy the builder.
-        
-        ICON_NAME="steam_icon_359320.png"
-        ICON_URL="https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Tux.png/256px-Tux.png"
-        
-        # 1. Download the icon
-        wget -q -O "EDCoLauncher.AppDir/$ICON_NAME" "$ICON_URL" || touch "EDCoLauncher.AppDir/$ICON_NAME"
-        
-        # 2. Also set it as the .DirIcon (what you see in the file manager)
-        cp "EDCoLauncher.AppDir/$ICON_NAME" EDCoLauncher.AppDir/.DirIcon
+        # We download a generic icon for the file itself (so it doesn't look blank in file manager)
+        # But the system will use the Steam icon for the running app.
+        wget -q -O EDCoLauncher.AppDir/.DirIcon https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Tux.png/256px-Tux.png
 
     - name: Create Internal AppRun (The Logic)
       run: |
@@ -60,7 +52,8 @@ jobs:
 
     - name: Create Internal Desktop File (Metadata)
       run: |
-        # Note: We must use the Icon name we just created above (without extension)
+        # This file lives INSIDE the AppImage and tells Linux how to handle the file.
+        # We use your requested Icon here so it matches Steam.
         cat <<EOF > EDCoLauncher.AppDir/EDCoLauncher.desktop
         [Desktop Entry]
         Name=EDCoLauncher
@@ -78,22 +71,13 @@ jobs:
         chmod +x EDCoLauncher.AppDir/usr/bin/EDCoLauncher.sh
 
     # ---------------------------------------------------------
-    # PART 2: BUILD THE APPIMAGE (FIXED FOR GITHUB RUNNERS)
+    # PART 2: BUILD THE APPIMAGE
     # ---------------------------------------------------------
     - name: Build AppImage
       run: |
-        # Download tool
         wget -q https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
         chmod +x appimagetool-x86_64.AppImage
-
-        # EXTRACT explicitly to bypass FUSE errors
-        ./appimagetool-x86_64.AppImage --appimage-extract
-        
-        # Run the extracted tool
-        export ARCH=x86_64
-        ./squashfs-root/AppRun EDCoLauncher.AppDir
-
-        # Rename output
+        ARCH=x86_64 ./appimagetool-x86_64.AppImage --appimage-extract-and-run EDCoLauncher.AppDir
         mv EDCoLauncher-x86_64.AppImage Elite_Dangerous_EDCoLauncher-x86_64.AppImage
 
     # ---------------------------------------------------------
@@ -101,6 +85,8 @@ jobs:
     # ---------------------------------------------------------
     - name: Create Desktop Shortcut File
       run: |
+        # This creates a separate file that the user can put on their desktop.
+        # It uses the EXACT content you requested.
         cat <<EOF > "Elite Dangerous (EDCoLauncher).desktop"
         [Desktop Entry]
         Name=Elite Dangerous (EDCoLauncher)
@@ -110,6 +96,8 @@ jobs:
         Categories=Game;Utility;
         Terminal=false
         EOF
+        
+        # Make it executable so it works immediately upon download
         chmod +x "Elite Dangerous (EDCoLauncher).desktop"
 
     # ---------------------------------------------------------

@@ -11,6 +11,8 @@ A Bash script designed to automate the installation, configuration, and launchin
     *   Includes HOTAS stability fix which is enabled by default
 *   **Auto Close**: Gracefully terminates add-ons when the game launcher or game window (if using MinEdLauncher) is closed.
 *   **Advanced Logging**: Redirects `stdout` and `stderr` to timestamped, color-stripped log files for easy debugging.
+*   **Google TTS Support***: Support for Google TTS
+
 
 ## 📋 Prerequisites
 
@@ -20,18 +22,19 @@ A Bash script designed to automate the installation, configuration, and launchin
 
 ## 🛠️ Installation & Setup
 
-1.  Download the latest release from [here](https://github.com/ZaviiNet/EDCoLauncherAppImg/releases).
-2.  Place the AppImage Anywhere, You can even add it to your applications
-3.  In your Elite Dangerous properties in Steam, set the Launch Options to:
+1.  Download the latest release from [here](https://github.com/ScronicDeEggdog/EDCoLauncher/releases).
+2.  Unzip the archive.
+3.  Make the script executable:
     ```bash
-    STEAM_COMPAT_LAUNCHER_SERVICE=container-runtime %command% & /path/to/EDCoLauncher-x86_64.AppImage
+    chmod +x EDCoLauncher.sh
     ```
-4.  Run Elite Once to Let the App Create a config file.
-5.  Configure your preferences in `EDCoLauncher_config`. For a first-time install (Path of the config is where you installed it, set:
+4.  Configure your preferences in `EDCoLauncher_config`. For a first-time install, set:
     ```bash
     INSTALL_EDCOPILOT="true"
     INSTALL_EDCOPTER="true"
     ```
+5.  Copy `EDCoLauncher.sh` and `EDCoLauncher_config` into your Elite Dangerous install directory. 
+    *   *Tip: Right-click the game in Steam > Properties > Installed Files > Browse.*
 
 ## ⚙️ Configuration
 
@@ -82,6 +85,8 @@ EDCOPTER_EXE_PATH=""
 # Ensure the feature is enabled in your config.
 
 # Provide the valid path to your Google Cloud JSON key file in EDCoLauncher_config.
+
+
 ```
 
 ## 🖥️ Usage

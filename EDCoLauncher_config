@@ -21,7 +21,7 @@ EDCOPILOT_DETECTION_TIMEOUT=50
 ####################
 
 # Set to true to fix HOTAS-related game crashes
-HOTAS_FIX_ENABLED="false"
+HOTAS_FIX_ENABLED="true"
 
 #################
 # Optional paths

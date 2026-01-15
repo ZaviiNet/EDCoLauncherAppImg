@@ -132,17 +132,21 @@ if [[ -f "$PWD/EDCoLauncher_config" ]]; then
     edcopter_final_path=$([[ -z "$edcopter_path" ]] && echo "${edcopter_default_install_exe_path}" || echo "${edcopter_path}")
 else
     echo "${colour_yellow}WARNING:${colour_reset} Config file does not exist. Setting defaults"
+
+    # General settings
     install_edcopilot="false"
     install_edcopter="false"
     edcopilot_enabled="true"
     edcopter_enabled="true"
+    launcher_detection_timeout=30
     edcopilot_detection_timeout=40
+
+    # Stability options
+    hotas_fix_enabled="true"
+
+    # Optional paths
     edcopilot_final_path="${edcopilot_default_install_exe_path}"
     edcopter_final_path="${edcopter_default_install_exe_path}"
-    hotas_fix_enabled="true"
-    proton_esync_disabled="false"
-    proton_fsync_disabled="false"
-    launcher_detection_timeout=30
 fi
 
 #############################
@@ -218,12 +222,11 @@ if [[ ${install_edcopter} == "true" ]]; then
             echo "${colour_cyan}INFO:${colour_reset} Installing EDCoPTER. Please wait..."
 
             # Install the app
-            "${WINELOADER}" start /wait /unix "${ed_wine_prefix}/drive_c/$(basename $latest_edcopter_exe_url)" /S /allusers /D="C:\Program Files\EDCoPTER"
-
+            "${WINELOADER}" start /wait /unix "${ed_wine_prefix}/drive_c/$(basename $latest_edcopter_exe_url)" /S /allusers /D="C:\Program Files\EDCoPTER" > "${edcopter_install_log_file}" 2>&1
             sleep 2
 
             if [[ ! -f "${edcopter_final_path}" ]]; then
-                echo "${colour_red}ERROR:${colour_reset} It looks like EDCoPTER wasn't installed properly. Please check the install log here: ${edcopter_install_log_file}" > "${edcopter_install_log_file}" 2>&1
+                echo "${colour_red}ERROR:${colour_reset} It looks like EDCoPTER wasn't installed properly. Please check the install log here: ${edcopter_install_log_file}"
                 edcopter_install_failed="true"
 
             else
@@ -353,10 +356,10 @@ if [[ "$edcopilot_enabled" == "true" && "${edcopilot_installed}" == "true" ]]; t
 
     # Set RunningOnLinux EDCoPilot flag to 1
     echo "${colour_cyan}INFO:${colour_reset} Setting the EDCoPilot RunningOnLinux flag to 1. This might need a relaunch to take effect"
-    sed -i "s/RunningOnLinux=\"0\"/RunningOnLinux=\"1\"\\r/" "$(dirname ${edcopilot_final_path})/EDCoPilot.ini" 2>/dev/null
-    sed -i "s/RunningOnLinux=\"0\"/RunningOnLinux=\"1\"\\r/" "$(dirname ${edcopilot_final_path})/edcopilotgui.ini" 2>/dev/null
+    sed -i "s/RunningOnLinux=\"0\"/RunningOnLinux=\"1\"\\r/" "$(dirname ${edcopilot_final_path})/EDCoPilot.ini"
+    sed -i "s/RunningOnLinux=\"0\"/RunningOnLinux=\"1\"\\r/" "$(dirname ${edcopilot_final_path})/edcopilotgui.ini"
 
-    # [NEW] Handle Google TTS Environment Variable
+    # Handle Google TTS Environment Variable
     google_tts_env_string=""
     if [[ -n "${google_tts_key_path}" ]]; then
         if [[ -f "${google_tts_key_path}" ]]; then
@@ -375,9 +378,6 @@ if [[ "$edcopilot_enabled" == "true" && "${edcopilot_installed}" == "true" ]]; t
     fi
 
     sleep 1
-
-    echo ""
-    echo "${colour_cyan}INFO:${colour_reset} Launching EDCoPilot"
 
     # We add ${google_tts_env_string} to the command below
     # Construct the base arguments array
@@ -399,12 +399,12 @@ if [[ "$edcopilot_enabled" == "true" && "${edcopilot_installed}" == "true" ]]; t
     echo ""
     echo "${colour_cyan}INFO:${colour_reset} Launching EDCoPilot"
 
-    # Run using the array expansion "${runtime_args[@]}" which preserves quoting
-    "$steam_linux_client_runtime_cmd" \
-        "${runtime_args[@]}" \
-        -- "${WINELOADER}" "${edcopilot_final_path}" &> "${edcopilot_log_file}" &
 
+    #$steam_linux_client_runtime_cmd --bus-name="com.steampowered.App${ed_app_id}" -- "${ed_proton_path}/proton" run "${edcopilot_final_path}" &> "${edcopilot_log_file}" &
+    $steam_linux_client_runtime_cmd --bus-name="com.steampowered.App${ed_app_id}" --pass-env-matching="WINE*" --pass-env-matching="STEAM*" --pass-env-matching="PROTON*" --env="SteamGameId=${ed_app_id}" -- "${WINELOADER}" "${edcopilot_final_path}" &> "${edcopilot_log_file}" &
     edcopilot_pid=$!
+
+    #echo "${edcopilot_pid}"
 
     sleep 4
 
