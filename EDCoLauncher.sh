@@ -1,6 +1,12 @@
 #!/bin/bash
 
 ############################
+# Disable Steam Game Overlay
+############################
+
+unset LD_PRELOAD
+
+############################
 # General vars
 ############################
 username="$(whoami)"
@@ -69,7 +75,7 @@ for path in $ed_library_paths; do
 done
 
 if [[ -z "${ed_wine_prefix}" ]]; then
-    echo "${colour_cyan}ERROR:${colour_reset} Couldn't find a suitable game prefix in your libraryfolders.vdf file. Make sure the the library Elite Dangerous is installed in is accessible."
+    echo "${colour_red}ERROR:${colour_reset} Couldn't find a suitable game prefix in your libraryfolders.vdf file. Make sure the the library Elite Dangerous is installed in is accessible."
     exit 1
 fi
 
@@ -92,7 +98,6 @@ export PROTON_LOG=1
 export PROTON_WINE="${WINELOADER}"
 export WINEDEBUG="+fixme,+err,+loaddll,+warn"
 unset LD_LIBRARY_PATH
-unset LD_PRELOAD
 
 ############################
 # EDCoPilot & EDCoPTER vars
@@ -151,8 +156,16 @@ fi
 #############################
 # Pre-flight cleanup
 #############################
-[[ -f "${edcopilot_log_file}" ]] && echo "${colour_cyan}INFO:${colour_reset} Cleaning up temp EDCoPilot log file"; rm -f "${edcopilot_log_file}"
-[[ -f "${edcopter_log_file}" ]] && echo "${colour_cyan}INFO:${colour_reset} Cleaning up temp EDCoPTER log file"; rm -f "${edcopter_log_file}"
+
+if [[ -f "${edcopilot_log_file}" ]]; then
+    echo "${colour_cyan}INFO:${colour_reset} Cleaning up temp EDCoPilot log file"
+    rm -f "${edcopilot_log_file}"
+fi
+
+if [[ -f "${edcopter_log_file}" ]]; then
+    echo "${colour_cyan}INFO:${colour_reset} Cleaning up temp EDCoPTER log file";
+    rm -f "${edcopter_log_file}"
+fi
 
 ############################
 # Check for existing installs
@@ -255,7 +268,7 @@ launcher_detection_count=0
 launcher_detection_interval=1
 
 echo "${colour_cyan}INFO:${colour_reset} Waiting for Elite Dangerous Launcher or MinEdLauncher to start for ${launcher_detection_timeout} seconds. You can change this value in the config file."
-while ! { pgrep -f "Z:..*steamapps.common.Elite Dangerous.EDLaunch.exe.*" > /dev/null || { pgrep -f "MinEdLauncher" > /dev/null && pgrep -f "Z:..*EliteDangerous64.exe" > /dev/null; }; }; do
+while ! pgrep -f "Z:..*steamapps.common.Elite Dangerous.EDLaunch.exe.*" > /dev/null && ! pgrep -f "MinEdLauncher" > /dev/null; do
 
     seconds_left=$(( $launcher_detection_timeout - $launcher_detection_count ))
     echo -ne "${seconds_left} seconds remaining...\r"
@@ -275,8 +288,26 @@ echo "${colour_cyan}INFO:${colour_reset} Found a launcher. Determining the launc
 
 # Get the correct launcher PID
 if pgrep -f "MinEdLauncher" > /dev/null; then
-    echo "${colour_cyan}INFO:${colour_reset} Detected MinEdLauncher. Getting game window PID..."
+    echo "${colour_cyan}INFO:${colour_reset} Detected MinEdLauncher. Waiting for game window to spawn..."
+
+    game_window_detection_count=0
+    game_window_detection_timeout=60
+    while ! pgrep -f "Z:..*EliteDangerous64.exe" > /dev/null; do
+        seconds_left=$(( $game_window_detection_timeout - $game_window_detection_count ))
+        echo -ne "${seconds_left} seconds remaining...\r"
+
+        if (( $game_window_detection_count >= $game_window_detection_timeout )); then
+            echo "${colour_red}ERROR:${colour_reset} Failed to detect a running game window. Exiting"
+            exit 1
+        fi
+
+        sleep 1
+        ((launcher_detection_count++))
+    done
+
+    echo "${colour_cyan}INFO:${colour_reset} Getting game window PID..."
     edlauncher_pid=$(pgrep -f "Z:..*EliteDangerous64.exe")
+
     if [[ -n "${edlauncher_pid}" ]]; then
         echo "${colour_cyan}INFO:${colour_reset} Elite Dangerous window PID: ${edlauncher_pid}. Preparing to launch Add-ons..."
     else
