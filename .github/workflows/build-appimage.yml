@@ -71,13 +71,23 @@ jobs:
         chmod +x EDCoLauncher.AppDir/usr/bin/EDCoLauncher.sh
 
     # ---------------------------------------------------------
-    # PART 2: BUILD THE APPIMAGE
+    # PART 2: BUILD THE APPIMAGE (FIXED)
     # ---------------------------------------------------------
     - name: Build AppImage
       run: |
+        # 7. Download appimagetool
         wget -q https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
         chmod +x appimagetool-x86_64.AppImage
-        ARCH=x86_64 ./appimagetool-x86_64.AppImage --appimage-extract-and-run EDCoLauncher.AppDir
+
+        # 8. Extract the tool explicitly to bypass FUSE errors (Exit Code 8)
+        ./appimagetool-x86_64.AppImage --appimage-extract
+        
+        # 9. Run the extracted tool to build your AppImage
+        # We must export ARCH so the tool knows what to build
+        export ARCH=x86_64
+        ./squashfs-root/AppRun EDCoLauncher.AppDir
+
+        # 10. Rename output
         mv EDCoLauncher-x86_64.AppImage Elite_Dangerous_EDCoLauncher-x86_64.AppImage
 
     # ---------------------------------------------------------
