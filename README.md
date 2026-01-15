@@ -95,11 +95,6 @@ To run EDCoLauncher alongside MinEdLauncher, change your Steam Launch Options to
 STEAM_COMPAT_LAUNCHER_SERVICE=container-runtime <MinEdLaunchOptions> & ./EDCoLauncher.sh
 ```
 
-<blockquote>
-<p>[!WARNING]
-EDCoLauncher does not support the use of the /autoquit option for MinEdLauncher</p>
-</blockquote>
-
 ## 📂 Troubleshooting & Logs
 The script generates specific logs in its local directory:
 *   **EDCoLauncher.log**: Core script execution and logic.
