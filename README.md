@@ -11,6 +11,8 @@ A Bash script designed to automate the installation, configuration, and launchin
     *   Includes HOTAS stability fix which is enabled by default
 *   **Auto Close**: Gracefully terminates add-ons when the game launcher or game window (if using MinEdLauncher) is closed.
 *   **Advanced Logging**: Redirects `stdout` and `stderr` to timestamped, color-stripped log files for easy debugging.
+*   **Google TTS Support***: Support for Google TTS
+
 
 ## 📋 Prerequisites
 
@@ -73,6 +75,18 @@ EDCOPILOT_EXE_PATH=""
 
 # Specify the path to the EDCoPTER.exe file if you installed into a non-default location. Leave blank otherwise
 EDCOPTER_EXE_PATH=""
+
+#################
+# Google TTS Support
+#################
+
+# The script features an option to enable Google Text-to-Speech (TTS). To use this:
+
+# Ensure the feature is enabled in your config.
+
+# Provide the valid path to your Google Cloud JSON key file in EDCoLauncher_config.
+
+
 ```
 
 ## 🖥️ Usage
